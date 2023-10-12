@@ -2,8 +2,7 @@ import 'package:test/test.dart';
 import 'package:tree_node/tree_node_nullable.dart';
 
 void main() {
-  final testingSuite =
-      BaseTreeTest<TreeNodeNullable<String>>((s) => TreeNodeNullable(s));
+  final testingSuite = BaseTreeTest<TreeNodeNullable<String>>((s) => TreeNodeNullable(s));
   testingSuite.runTests();
 }
 
@@ -144,16 +143,12 @@ class BaseTreeTest<T extends TreeNodeNullable<String>> {
         expect(result, nodeE);
       });
 
-      test('getRoot should return the root node of the tree', () {
-        final root = nodeF.getRoot();
+      //************************************************************************//
 
-        expect(root, rootA);
-      });
-
-      test('height should return the height of the tree', () {
-        final height = rootA.height;
-
-        expect(height, equals(3));
+      test('children creates a copy', () {
+        final children = rootA.children;
+        expect(children, equals(rootA.children_));
+        expect(children.hashCode, isNot(equals(rootA.children_.hashCode)));
       });
 
       test('isLeafNode', () {
@@ -165,15 +160,19 @@ class BaseTreeTest<T extends TreeNodeNullable<String>> {
         expect(isLeaf, false);
       });
 
-      test('operator [] should return the child node at the specified index',
-          () {
+      test('height should return the height of the tree', () {
+        final height = rootA.height;
+
+        expect(height, equals(3));
+      });
+
+      test('operator [] should return the child node at the specified index', () {
         final child = rootA[0];
 
         expect(child, equals(nodeB));
       });
 
-      test('operator []= should assign a child node at the specified index',
-          () {
+      test('operator []= should assign a child node at the specified index', () {
         T newNode = constructor("newNode");
         rootA[0] = newNode;
 
@@ -199,15 +198,13 @@ class BaseTreeTest<T extends TreeNodeNullable<String>> {
         expect(hasChildren, isTrue);
       });
 
-      test('hasChild should return true if the node has the specified child',
-          () {
+      test('hasChild should return true if the node has the specified child', () {
         final hasChild = rootA.hasChild(nodeB);
 
         expect(hasChild, isTrue);
       });
 
-      test('popChildAtIndex',
-          () {
+      test('popChildAtIndex', () {
         final poppedNode = rootA.popChildAtIndex(0);
 
         expect(poppedNode, equals(nodeB));
@@ -215,17 +212,134 @@ class BaseTreeTest<T extends TreeNodeNullable<String>> {
         expect(nodeB.parent, isNull);
       });
 
-      test('get child at index',
-          () {
-        final child = rootA[0];
+      test('popChild', () {
+        final poppedNode = rootA.popChild(nodeB);
 
-        expect(child, equals(nodeB));
+        expect(poppedNode, equals(nodeB));
+        expect(rootA.hasChild(nodeB), isFalse);
+        expect(nodeB.parent, isNull);
+      });
+
+      test('reverseChildren', (){
+        final children = rootA.children;
+        rootA.reverseChildren();
+        final newChildren = rootA.children;
+        for(int i = 0; i < children.length; i++) {
+          expect(children[i] == newChildren[children.length - 1 - i], true);
+        }
+      });
+
+      test('removeAllChildren', (){
+        expect(rootA.getLengthOfChildren(), 2);
+        rootA.removeAllChildren();
+        expect(rootA.getLengthOfChildren(), 0);
+      });
+
+      test('firstChildOrNull and lastChildOrNull',(){
+        final node = constructor('A');
+        expect(node.firstChildOrNull(), null);
+        final b = constructor('B');
+        final c = constructor('C');
+        node.insert(b);
+        node.insert(c);
+        expect(node.firstChildOrNull(), b);
+        expect(node.lastChildOrNull(), c);
+      });
+
+      test('getChildWhere', (){
+        final node = rootA.getChildWhere((e) => e?.value == 'C');
+        expect(node, nodeC);
+      });
+
+      test('forEachChild', (){
+        final children = [];
+        rootA.forEachChild((e) {
+          children.add(e);
+        });
+        expect(children, rootA.children);
+      });
+
+      //************************************************************************//
+
+      test('copy', (){
+        final treeCopy = rootA.copy();
+        final originalElements = rootA.preOrderIterable().toList();
+        final copyElements = treeCopy.preOrderIterable().toList();
+        expect(copyElements.hashCode, isNot(equals(originalElements.hashCode)));
+        expect(copyElements.length, originalElements.length);
+        for(int i=0; i<copyElements.length; i++){
+          expect(copyElements[i], isNot(equals(originalElements[i])));
+          expect(copyElements[i].value, originalElements[i].value);
+        }
+      });
+
+      test('map', (){
+        final mapped = rootA.map((e) => "$e!");
+        final firstChild = mapped.firstChildOrNull();
+        expect(firstChild?.value, "B!");
+        for(final node in mapped.preOrderIterable()){
+          node.value.endsWith("!");
+        }
+      });
+
+      test('cast', (){
+        final mapped = rootA.map((e) => 1 as num); // ignore Unnecessary cast
+        final casted = mapped.cast<int>();
+        for(final node in casted.preOrderIterable()){
+          expect(node.value, isA<int>());
+        }
+      });
+
+      test('numberOfNodesInTree',(){
+        expect(rootA.numberOfNodesInTree(), 7);
+      });
+
+      test('hasDescendant',(){
+        expect(rootA.hasDescendant(nodeG), true);
+        expect(nodeG.hasDescendant(rootA), false);
+      });
+
+      test('hasAncestor',(){
+        expect(rootA.hasAncestor(nodeG), false);
+        expect(nodeG.hasAncestor(rootA), true);
+      });
+
+      test('hasSibling', (){
+        expect(nodeB.hasSibling(nodeC), true);
+        expect(nodeC.hasSibling(nodeB), true);
+        expect(nodeC.hasSibling(rootA), false);
+        expect(nodeC.hasSibling(nodeG), false);
+      });
+
+      test('removeFromParent', (){
+        expect(rootA.hasChild(nodeB),true);
+        expect(nodeB.parent == rootA,true);
+        nodeB.removeFromParent();
+        expect(rootA.hasChild(nodeB),false);
+        expect(nodeB.parent == rootA,false);
       });
 
       test('getRoot should return the root node of the tree', () {
         final root = nodeF.getRoot();
 
-        expect(root, equals(rootA));
+        expect(root, rootA);
+      });
+
+      test('getParentWhere',(){
+        expect(nodeG.getParentWhere((e) => e.value == "A"), rootA);
+        expect(nodeG.getParentWhere((e) => e.value == "C"), nodeC);
+      });
+
+      test('level', () {
+        expect(nodeG.level, 3);
+        expect(nodeC.level, 2);
+        expect(rootA.level, 1);
+      });
+
+      test('heightOfTreeThisNodeBelongsTo', (){
+        expect(nodeG.heightOfTreeThisNodeBelongsTo, 3);
+        expect(nodeC.heightOfTreeThisNodeBelongsTo, 3);
+        expect(rootA.heightOfTreeThisNodeBelongsTo, 3);
       });
     });
   }
