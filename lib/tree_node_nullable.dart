@@ -491,6 +491,8 @@ class TreeNodeNullable<T> {
     }
   }
 
+  /// Every extending class needs to override for the map, copy, and cast methods to work. This creates a node of
+  /// the extending type from the past value
   @mustBeOverridden
   TreeNodeNullable<E> constructor<E>(E value){
     return TreeNodeNullable(value);
