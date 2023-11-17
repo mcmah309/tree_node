@@ -254,46 +254,6 @@ class TreeNodeNullable<T> {
 
   //************************************************************************//
 
-  /// {@template searchInOrder}
-  /// In in-order traversal, you recursively traverse the left subtree first, then visit the current node, and finally recursively traverse the right subtree.
-  /// In-order traversal is commonly used to retrieve the nodes of a binary search tree in ascending order.
-  ///           A
-  ///         /   \
-  ///        B     C
-  ///       / \   / \
-  ///      D   E F   G
-  /// In-order traversal: D, B, E, A, F, C, G
-  @mustBeOverridden
-  TreeNodeNullable<T>? searchInOrder(bool Function(TreeNodeNullable<T>) test) {
-    return this.inOrderIterable().firstWhereOrNull(test);
-  }
-
-  /// {@template inOrderIterable}
-  /// In in-order traversal, you recursively traverse the left subtree first, then visit the current node, and finally recursively traverse the right subtree.
-  /// In-order traversal is commonly used to retrieve the nodes of a binary search tree in ascending order.
-  ///           A
-  ///         /   \
-  ///        B     C
-  ///       / \   / \
-  ///      D   E F   G
-  /// In-order traversal: D, B, E, A, F, C, G
-  /// {@endtemplate}
-  @mustBeOverridden
-  Iterable<TreeNodeNullable<T>> inOrderIterable() sync* {
-    TreeNodeNullable<T>? firstChild = children_.firstOrNull;
-    if (firstChild != null) {
-      yield* firstChild.inOrderIterable();
-    }
-    yield this;
-    for (final child in children_.skip(1)) {
-      if (child != null) {
-        yield* child.inOrderIterable();
-      }
-    }
-  }
-
-  //************************************************************************//
-
   /// {@template searchPostOrder}
   /// In post-order traversal, you recursively traverse the left subtree first, then recursively traverse the right subtree, and finally visit the current node.
   /// Post-order traversal is commonly used to delete the tree or to perform some calculations involving the descendants of a node before visiting the node itself.

@@ -38,11 +38,6 @@ class BaseTreeTest<T extends TreeNodeNullable<String>> {
         rootA.preOrderIterable().forEach((node) => values.add(node.value));
         expect(values, equals(["A", "B", "D", "E", "C", "F", "G"]));
 
-        // In-order traversal
-        values = [];
-        rootA.inOrderIterable().forEach((node) => values.add(node.value));
-        expect(values, equals(["D", "B", "E", "A", "F", "C", "G"]));
-
         // Post-order traversal
         values = [];
         rootA.postOrderIterable().forEach((node) => values.add(node.value));
@@ -70,18 +65,6 @@ class BaseTreeTest<T extends TreeNodeNullable<String>> {
           return false;
         });
         expect(values, equals(["A", "B", "D", "E", "C", "F"]));
-        expect(val?.value, equals("G"));
-
-        // In-order traversal
-        values = [];
-        val = rootA.searchInOrder((node) {
-          if (node.value == "G") {
-            return true;
-          }
-          values.add(node.value);
-          return false;
-        });
-        expect(values, equals(["D", "B", "E", "A", "F", "C"]));
         expect(val?.value, equals("G"));
 
         // Post-order traversal

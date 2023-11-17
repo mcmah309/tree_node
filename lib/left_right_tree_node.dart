@@ -1,4 +1,4 @@
-import 'package:tree_node/tree_node_nullable.dart';
+
 
 /// Base class for left right trees like binary search trees such as "red and black trees"
 // abstract class LeftRightTreeNode<T> extends TreeNodeNullable<T> {
@@ -139,18 +139,6 @@ import 'package:tree_node/tree_node_nullable.dart';
 //   @override
 //   Iterable<LeftRightTreeNode<T>> preOrderIterable() sync* {
 //     yield* super.preOrderIterable().cast<LeftRightTreeNode<T>>();
-//   }
-//
-//   //************************************************************************//
-//
-//   @override
-//   LeftRightTreeNode<T>? searchInOrder(bool Function(LeftRightTreeNode<T>) test) {
-//     return super.searchInOrder((e) => test(e as LeftRightTreeNode<T>)) as LeftRightTreeNode<T>?;
-//   }
-//
-//   @override
-//   Iterable<LeftRightTreeNode<T>> inOrderIterable() sync* {
-//     yield* super. inOrderIterable().cast<LeftRightTreeNode<T>>();
 //   }
 //
 //   //************************************************************************//

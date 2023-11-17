@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:tree_node/tree_node_nullable.dart';
 
 /// Node of a Tree where children cannot be null. Note "children" does not mean values.
@@ -135,20 +133,6 @@ class TreeNode<T> extends TreeNodeNullable<T> {
   @override
   Iterable<TreeNode<T>> preOrderIterable() sync* {
     yield* super.preOrderIterable().cast<TreeNode<T>>();
-  }
-
-  //************************************************************************//
-
-  /// {@macro searchInOrder}
-  @override
-  TreeNode<T>? searchInOrder(bool Function(TreeNode<T>) test) {
-    return super.searchInOrder((e) => test(e as TreeNode<T>)) as TreeNode<T>?;
-  }
-
-  /// {@macro inOrderIterable}
-  @override
-  Iterable<TreeNode<T>> inOrderIterable() sync* {
-    yield* super. inOrderIterable().cast<TreeNode<T>>();
   }
 
   //************************************************************************//
